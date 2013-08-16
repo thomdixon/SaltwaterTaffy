@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Container.cs" />
     <Compile Include="Scanner.cs" />
     <Compile Include="Nmap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

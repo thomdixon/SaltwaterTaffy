@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.IO;
 using Simple.DotNMap;
@@ -461,12 +462,17 @@ namespace SaltwaterTaffy
         }
     }
 
+    public class NmapException : ApplicationException
+    {
+        public NmapException(string ex) : base(ex) {}
+    }
+
     public class NmapContext
     {
         public string Path { get; set; }
         public string OutputPath { get; set; }
         public NmapOptions Options { get; set; }
-        public IList<string> Targets { get; set; }
+        public string Target { get; set; }
 
         public NmapContext()
         {
@@ -504,10 +510,15 @@ namespace SaltwaterTaffy
             using (var process = new Process())
             {
                 process.StartInfo.FileName = Path;
-                process.StartInfo.Arguments = string.Format("{0} {1}", Options, string.Join(" ", Targets));
+                process.StartInfo.Arguments = string.Format("{0} {1}", Options, Target);
                 process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 process.Start();
                 process.WaitForExit();
+
+                if (!File.Exists(OutputPath))
+                {
+                    throw new NmapException(process.StartInfo.Arguments);
+                }
             }
 
             return Serialization.DeserializeFromFile<nmaprun>(OutputPath);

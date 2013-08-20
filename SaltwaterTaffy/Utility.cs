@@ -23,7 +23,7 @@ namespace SaltwaterTaffy.Utility
     }
 
     /// <summary>
-    /// Interface definition of Either
+    /// Interface definition of Either monad
     /// </summary>
     /// <typeparam name="Tl">type of the Left value</typeparam>
     /// <typeparam name="Tr">type of the Right value</typeparam>
@@ -47,7 +47,7 @@ namespace SaltwaterTaffy.Utility
     }
 
     /// <summary>
-    /// Static helper class for Either
+    /// Static helper class for Either monad
     /// </summary>
     public static class Either
     {

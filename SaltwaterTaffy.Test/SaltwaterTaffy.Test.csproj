@@ -46,6 +46,7 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContainerUnitTests.cs" />
     <Compile Include="NmapOptionsUnitTests.cs" />
     <Compile Include="NmapUnitTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

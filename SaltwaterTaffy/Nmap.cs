@@ -126,6 +126,9 @@ namespace SaltwaterTaffy
         Help,
     }
 
+    /// <summary>
+    /// Class which represents command-line options for nmap
+    /// </summary>
     public class NmapOptions : IDictionary<NmapFlag, string>
     {
         #region NmapFlagToOption
@@ -426,6 +429,22 @@ namespace SaltwaterTaffy
             }
         }
 
+        public void AddAll(IEnumerable<NmapFlag> flags)
+        {
+            foreach (var flag in flags)
+            {
+                Add(flag);
+            }
+        }
+
+        public void AddAll(IEnumerable<KeyValuePair<NmapFlag, string>> kvps)
+        {
+            foreach (var kvp in kvps)
+            {
+                Add(kvp.Key, kvp.Value);
+            }
+        }
+
         public bool Remove(NmapFlag key)
         {
             return _nmapOptions.Remove(_nmapFlagToOption[key]);
@@ -467,13 +486,34 @@ namespace SaltwaterTaffy
         public NmapException(string ex) : base(ex) {}
     }
 
+    /// <summary>
+    /// A class that represents an nmap run
+    /// </summary>
     public class NmapContext
     {
+        /// <summary>
+        /// The path to the nmap executable
+        /// </summary>
         public string Path { get; set; }
+
+        /// <summary>
+        /// The output path for the nmap XML file
+        /// </summary>
         public string OutputPath { get; set; }
+
+        /// <summary>
+        /// The specified nmap options
+        /// </summary>
         public NmapOptions Options { get; set; }
+
+        /// <summary>
+        /// The intended target
+        /// </summary>
         public string Target { get; set; }
 
+        /// <summary>
+        /// By default we try to find the path to the nmap executable by searching the path, the output XML file is a temporary file, and the nmap options are empty.
+        /// </summary>
         public NmapContext()
         {
             Path = GetPathToNmap();
@@ -481,6 +521,11 @@ namespace SaltwaterTaffy
             Options = new NmapOptions();
         }
 
+        /// <summary>
+        /// This searches our PATH environment variable for a particular file
+        /// </summary>
+        /// <param name="filename">The file to search for</param>
+        /// <returns>The path to the file if it is found, the empty string otherwise</returns>
         private string LocateExecutable(string filename)
         {
             var path = Environment.GetEnvironmentVariable("path");
@@ -498,11 +543,19 @@ namespace SaltwaterTaffy
             return string.Empty;
         }
 
+        /// <summary>
+        /// This searches our PATH for the nmap executable
+        /// </summary>
+        /// <returns>The path to the nmap exsecutable or the empty string if it cannot be located</returns>
         public string GetPathToNmap()
         {
             return LocateExecutable("nmap.exe");
         }
 
+        /// <summary>
+        /// Execute an nmap run with the specified options on the intended target, writing the resultant XML to the specified file
+        /// </summary>
+        /// <returns>An nmaprun object representing the result of an nmap run</returns>
         public nmaprun Run()
         {
             Options[NmapFlag.XmlOutput] = OutputPath;

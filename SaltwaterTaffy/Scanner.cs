@@ -36,10 +36,13 @@ namespace SaltwaterTaffy
                            x => new Port
                                {
                                    PortNumber = int.Parse(x.portid),
-                                   Protocol =
-                                       (ProtocolType)
-                                       Enum.Parse(typeof (ProtocolType),
-                                                  x.protocol.ToString().Capitalize()),
+                                   Protocol = x.protocol != portProtocol.sctp
+                                                  ? (ProtocolType)
+                                                    Enum.Parse(typeof (ProtocolType),
+                                                               x.protocol == portProtocol.ip
+                                                                   ? x.protocol.ToString().ToUpperInvariant()
+                                                                   : x.protocol.ToString().Capitalize())
+                                                  : ProtocolType.Unknown,
                                    Filtered = x.state.state1 == "filtered",
                                    Service = x.service != null
                                                  ? new Service

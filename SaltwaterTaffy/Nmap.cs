@@ -365,7 +365,7 @@ namespace SaltwaterTaffy
             };
         #endregion
 
-        private Dictionary<string, string> _nmapOptions;
+        private readonly Dictionary<string, string> _nmapOptions;
 
         public NmapOptions()
         {
@@ -526,7 +526,7 @@ namespace SaltwaterTaffy
         /// </summary>
         /// <param name="filename">The file to search for</param>
         /// <returns>The path to the file if it is found, the empty string otherwise</returns>
-        private string LocateExecutable(string filename)
+        private static string LocateExecutable(string filename)
         {
             var path = Environment.GetEnvironmentVariable("path");
             var folders = path.Split(';');
@@ -556,8 +556,28 @@ namespace SaltwaterTaffy
         /// Execute an nmap run with the specified options on the intended target, writing the resultant XML to the specified file
         /// </summary>
         /// <returns>An nmaprun object representing the result of an nmap run</returns>
-        public nmaprun Run()
+        public virtual nmaprun Run()
         {
+            if (string.IsNullOrEmpty(OutputPath))
+            {
+                throw new ApplicationException("Nmap output file path is null or empty");
+            }
+
+            if (string.IsNullOrEmpty(Path) || !File.Exists(Path))
+            {
+                throw new ApplicationException("Path to nmap is invalid");
+            }
+
+            if (string.IsNullOrEmpty(Target))
+            {
+                throw new ApplicationException("Attempted run on empty target");
+            }
+
+            if (Options == null)
+            {
+                throw new ApplicationException("Nmap options null");
+            }
+
             Options[NmapFlag.XmlOutput] = OutputPath;
 
             using (var process = new Process())

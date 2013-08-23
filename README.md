@@ -1,23 +1,19 @@
-SaltwaterTaffy
-==============
+# SaltwaterTaffy
 
 SaltwaterTaffy is an [nmap](http://www.nmap.org) wrapper library for .NET, which
 aims to provide a simple interface for host discovery, firewall detection, and
 port scanning. This library was partially inspired by
 [nmap4j](https://github.com/narkisr/nmap4j).
 
-Dependencies
-------------
+## Dependencies
 
 SaltwaterTaffy utilizes [DotNMap](http://dotnmap.codeplex.com) to parse nmap's XML output format. A DLL is provided in `lib`.
 
-Usage & Examples
-----------------
+## Usage & Examples
 
 Using the library is (hopefully) fairly simple. A demo project is included in `SaltwaterTaffy.Demo`, and some examples are provided below.
 
-Host discovery
-++++++++++++++
+### Host discovery
 
 Host discovery will yield a collection of `Host` objects, each containing information about the discovered host.
 
@@ -36,8 +32,7 @@ Host discovery will yield a collection of `Host` objects, each containing inform
     }
 ```
 
-Port scan (TCP SYN scan)
-++++++++++++++++++++++++
+### Port scan (TCP SYN scan)
 
 ```C#
     using SaltwaterTaffy;
@@ -54,8 +49,7 @@ Port scan (TCP SYN scan)
     }
 ```
 
-A more advanced scan
-++++++++++++++++++++
+### A more advanced scan
 
 ```C#
     using SaltwaterTaffy;

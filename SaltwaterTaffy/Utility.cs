@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿// This file is part of SaltwaterTaffy, an nmap wrapper library for .NET
+// Copyright (C) 2013 Thom Dixon <thom@thomdixon.org>
+// Released under the GNU GPLv2 or any later version
 namespace SaltwaterTaffy.Utility
 {
-    
     public static class StringExtensions
     {
         public static string Capitalize(this string s)

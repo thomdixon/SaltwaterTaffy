@@ -1,12 +1,9 @@
-﻿using System;
+﻿// This file is part of SaltwaterTaffy, an nmap wrapper library for .NET
+// Copyright (C) 2013 Thom Dixon <thom@thomdixon.org>
+// Released under the GNU GPLv2 or any later version
+using System;
 using System.IO;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SaltwaterTaffy;
-using SaltwaterTaffy.Container;
-using Simple.DotNMap;
 
 namespace SaltwaterTaffy.Test
 {
@@ -70,7 +67,7 @@ namespace SaltwaterTaffy.Test
     public class NmapContextUnitTests
     {
         [TestMethod]
-        [ExpectedException(typeof(ApplicationException))]
+        [ExpectedException(typeof (ApplicationException))]
         public void when_Run_is_called_and_OutputPath_is_empty_then_should_throw_ApplicationException()
         {
             var nc = new NmapContext
@@ -81,7 +78,7 @@ namespace SaltwaterTaffy.Test
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ApplicationException))]
+        [ExpectedException(typeof (ApplicationException))]
         public void when_Run_is_called_and_OutputPath_is_null_then_should_throw_ApplicationException()
         {
             var nc = new NmapContext
@@ -92,7 +89,7 @@ namespace SaltwaterTaffy.Test
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ApplicationException))]
+        [ExpectedException(typeof (ApplicationException))]
         public void when_Run_is_called_and_Path_is_empty_then_should_throw_ApplicationException()
         {
             var nc = new NmapContext
@@ -103,7 +100,7 @@ namespace SaltwaterTaffy.Test
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ApplicationException))]
+        [ExpectedException(typeof (ApplicationException))]
         public void when_Run_is_called_and_Path_is_null_then_should_throw_ApplicationException()
         {
             var nc = new NmapContext
@@ -114,7 +111,7 @@ namespace SaltwaterTaffy.Test
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ApplicationException))]
+        [ExpectedException(typeof (ApplicationException))]
         public void when_Run_is_called_and_Path_is_invalid_then_should_throw_ApplicationException()
         {
             var nc = new NmapContext
@@ -125,7 +122,7 @@ namespace SaltwaterTaffy.Test
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ApplicationException))]
+        [ExpectedException(typeof (ApplicationException))]
         public void when_Run_is_called_and_Target_is_empty_then_should_throw_ApplicationException()
         {
             var nc = new NmapContext
@@ -136,7 +133,7 @@ namespace SaltwaterTaffy.Test
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ApplicationException))]
+        [ExpectedException(typeof (ApplicationException))]
         public void when_Run_is_called_and_Options_is_null_then_should_throw_ApplicationException()
         {
             var nc = new NmapContext
@@ -145,6 +142,5 @@ namespace SaltwaterTaffy.Test
                 };
             nc.Run();
         }
-
     }
 }

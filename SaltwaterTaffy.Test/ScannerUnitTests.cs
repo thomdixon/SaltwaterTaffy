@@ -1,8 +1,8 @@
-﻿using System;
-using System.Net.Sockets;
-using System.Text;
-using System.Collections.Generic;
+﻿// This file is part of SaltwaterTaffy, an nmap wrapper library for .NET
+// Copyright (C) 2013 Thom Dixon <thom@thomdixon.org>
+// Released under the GNU GPLv2 or any later version
 using System.Linq;
+using System.Net.Sockets;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SaltwaterTaffy.Container;
 using Simple.DotNMap;
@@ -124,7 +124,6 @@ namespace SaltwaterTaffy.Test
                                                         }
                                                 }
                                         }
-
                                 }
                         }
                 };
@@ -1023,13 +1022,13 @@ namespace SaltwaterTaffy.Test
                                         {
                                             new os
                                                 {
-                                                    osmatch = new []
+                                                    osmatch = new[]
                                                         {
                                                             new osmatch
                                                                 {
                                                                     accuracy = "100",
                                                                     name = "Temple OS (www.templeos.org)",
-                                                                    osclass = new []
+                                                                    osclass = new[]
                                                                         {
                                                                             new osclass
                                                                                 {
@@ -1055,17 +1054,17 @@ namespace SaltwaterTaffy.Test
         public void when_ScanResult_constructed_with_nmaprun_then_OsMatches_Name_should_be_correct()
         {
             var nr = new nmaprun
-            {
-                runstats = new runstats
                 {
-                    hosts = new hosts
-                    {
-                        total = "0",
-                        down = "0",
-                        up = "0"
-                    }
-                },
-                Items = new object[]
+                    runstats = new runstats
+                        {
+                            hosts = new hosts
+                                {
+                                    total = "0",
+                                    down = "0",
+                                    up = "0"
+                                }
+                        },
+                    Items = new object[]
                         {
                             new host
                                 {
@@ -1077,13 +1076,13 @@ namespace SaltwaterTaffy.Test
                                         {
                                             new os
                                                 {
-                                                    osmatch = new []
+                                                    osmatch = new[]
                                                         {
                                                             new osmatch
                                                                 {
                                                                     accuracy = "100",
                                                                     name = "Temple OS (www.templeos.org)",
-                                                                    osclass = new []
+                                                                    osclass = new[]
                                                                         {
                                                                             new osclass
                                                                                 {
@@ -1099,7 +1098,7 @@ namespace SaltwaterTaffy.Test
                                         }
                                 }
                         }
-            };
+                };
             var sr = new ScanResult(nr);
 
             Assert.AreEqual("Temple OS (www.templeos.org)", sr.Hosts.First().OsMatches.First().Name);
@@ -1109,17 +1108,17 @@ namespace SaltwaterTaffy.Test
         public void when_ScanResult_constructed_with_nmaprun_then_OsMatches_Family_should_be_correct()
         {
             var nr = new nmaprun
-            {
-                runstats = new runstats
                 {
-                    hosts = new hosts
-                    {
-                        total = "0",
-                        down = "0",
-                        up = "0"
-                    }
-                },
-                Items = new object[]
+                    runstats = new runstats
+                        {
+                            hosts = new hosts
+                                {
+                                    total = "0",
+                                    down = "0",
+                                    up = "0"
+                                }
+                        },
+                    Items = new object[]
                         {
                             new host
                                 {
@@ -1131,13 +1130,13 @@ namespace SaltwaterTaffy.Test
                                         {
                                             new os
                                                 {
-                                                    osmatch = new []
+                                                    osmatch = new[]
                                                         {
                                                             new osmatch
                                                                 {
                                                                     accuracy = "100",
                                                                     name = "Temple OS (www.templeos.org)",
-                                                                    osclass = new []
+                                                                    osclass = new[]
                                                                         {
                                                                             new osclass
                                                                                 {
@@ -1153,7 +1152,7 @@ namespace SaltwaterTaffy.Test
                                         }
                                 }
                         }
-            };
+                };
             var sr = new ScanResult(nr);
 
             Assert.AreEqual("Temple", sr.Hosts.First().OsMatches.First().Family);
@@ -1163,17 +1162,17 @@ namespace SaltwaterTaffy.Test
         public void when_ScanResult_constructed_with_nmaprun_then_OsMatches__should_be_correct()
         {
             var nr = new nmaprun
-            {
-                runstats = new runstats
                 {
-                    hosts = new hosts
-                    {
-                        total = "0",
-                        down = "0",
-                        up = "0"
-                    }
-                },
-                Items = new object[]
+                    runstats = new runstats
+                        {
+                            hosts = new hosts
+                                {
+                                    total = "0",
+                                    down = "0",
+                                    up = "0"
+                                }
+                        },
+                    Items = new object[]
                         {
                             new host
                                 {
@@ -1185,13 +1184,13 @@ namespace SaltwaterTaffy.Test
                                         {
                                             new os
                                                 {
-                                                    osmatch = new []
+                                                    osmatch = new[]
                                                         {
                                                             new osmatch
                                                                 {
                                                                     accuracy = "100",
                                                                     name = "Temple OS (www.templeos.org)",
-                                                                    osclass = new []
+                                                                    osclass = new[]
                                                                         {
                                                                             new osclass
                                                                                 {
@@ -1207,7 +1206,7 @@ namespace SaltwaterTaffy.Test
                                         }
                                 }
                         }
-            };
+                };
             var sr = new ScanResult(nr);
 
             Assert.AreEqual("apocalypse", sr.Hosts.First().OsMatches.First().Generation);

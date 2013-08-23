@@ -1,13 +1,13 @@
-﻿using System;
+﻿// This file is part of SaltwaterTaffy, an nmap wrapper library for .NET
+// Copyright (C) 2013 Thom Dixon <thom@thomdixon.org>
+// Released under the GNU GPLv2 or any later version
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using System.Reflection;
-using System.Text;
-using SaltwaterTaffy;
 using SaltwaterTaffy.Container;
 using SaltwaterTaffy.Utility;
 using Simple.DotNMap;
@@ -15,17 +15,46 @@ using Simple.DotNMap;
 namespace SaltwaterTaffy
 {
     /// <summary>
-    /// Represents the result of an nmap run
+    ///     Represents the result of an nmap run
     /// </summary>
     public class ScanResult
     {
+        /// <summary>
+        ///     Use the provided raw nmaprun object to construct a more sane ScanResult object which contains information about the nmap run
+        /// </summary>
+        /// <param name="result">The result of parsing an nmaprun </param>
+        public ScanResult(nmaprun result)
+        {
+            Total = int.Parse(result.runstats.hosts.total);
+            Up = int.Parse(result.runstats.hosts.up);
+            Down = int.Parse(result.runstats.hosts.down);
+            Hosts = result.Items != null
+                        ? result.Items.OfType<host>().Select(
+                            x => new Host
+                                {
+                                    Address = IPAddress.Parse(x.address.addr),
+                                    Ports =
+                                        PortsSection(
+                                            x.Items.OfType<ports>().DefaultIfEmpty(null).FirstOrDefault()),
+                                    ExtraPorts =
+                                        ExtraPortsSection(
+                                            x.Items.OfType<ports>().DefaultIfEmpty(null).FirstOrDefault()),
+                                    Hostnames =
+                                        HostnamesSection(
+                                            x.Items.OfType<hostnames>().DefaultIfEmpty(null).FirstOrDefault()),
+                                    OsMatches = OsMatchesSection(
+                                        x.Items.OfType<os>().DefaultIfEmpty(null).FirstOrDefault())
+                                })
+                        : Enumerable.Empty<Host>();
+        }
+
         public int Total { get; set; }
         public int Up { get; set; }
         public int Down { get; set; }
         public IEnumerable<Host> Hosts { get; set; }
 
         /// <summary>
-        /// Process the "ports" section of the XML document
+        ///     Process the "ports" section of the XML document
         /// </summary>
         /// <param name="portsSection">Object representing the ports section</param>
         /// <returns>A collection of Port objects containing information about each individual port</returns>
@@ -59,7 +88,7 @@ namespace SaltwaterTaffy
         }
 
         /// <summary>
-        /// Process the "extraports" section of the XML document (contains large numbers of ports in the same state)
+        ///     Process the "extraports" section of the XML document (contains large numbers of ports in the same state)
         /// </summary>
         /// <param name="portsSection">Object representing the ports section</param>
         /// <returns>A collection of ExtraPorts objects if the extraports section exists, empty otherwise</returns>
@@ -76,19 +105,19 @@ namespace SaltwaterTaffy
         }
 
         /// <summary>
-        /// Process the "hostnames" section of the XML document
+        ///     Process the "hostnames" section of the XML document
         /// </summary>
         /// <param name="names">Object representing the hostnames section</param>
         /// <returns>A collection of hostnames as strings if the hostname exists, empty otherwise</returns>
         private static IEnumerable<string> HostnamesSection(hostnames names)
         {
             return names != null && names.hostname != null
-                    ? names.hostname.Select(x => x.name)
-                    : Enumerable.Empty<string>();
+                       ? names.hostname.Select(x => x.name)
+                       : Enumerable.Empty<string>();
         }
 
         /// <summary>
-        /// Process the "os" section of the XML document
+        ///     Process the "os" section of the XML document
         /// </summary>
         /// <param name="osSection">Object representing the hos section</param>
         /// <returns>A collection of Os objects if osmatch is not null, empty otherwise</returns>
@@ -104,41 +133,11 @@ namespace SaltwaterTaffy
                                    Generation = x.osclass[0].osgen
                                })
                        : Enumerable.Empty<Os>();
-
-        }
-
-        /// <summary>
-        /// Use the provided raw nmaprun object to construct a more sane ScanResult object which contains information about the nmap run
-        /// </summary>
-        /// <param name="result">The result of parsing an nmaprun </param>
-        public ScanResult(nmaprun result)
-        {
-            Total = int.Parse(result.runstats.hosts.total);
-            Up = int.Parse(result.runstats.hosts.up);
-            Down = int.Parse(result.runstats.hosts.down);
-            Hosts = result.Items != null
-                        ? result.Items.OfType<host>().Select(
-                            x => new Host
-                                {
-                                    Address = IPAddress.Parse(x.address.addr),
-                                    Ports =
-                                        PortsSection(
-                                            x.Items.OfType<ports>().DefaultIfEmpty(null).FirstOrDefault()),
-                                    ExtraPorts =
-                                        ExtraPortsSection(
-                                            x.Items.OfType<ports>().DefaultIfEmpty(null).FirstOrDefault()),
-                                    Hostnames =
-                                        HostnamesSection(
-                                            x.Items.OfType<hostnames>().DefaultIfEmpty(null).FirstOrDefault()),
-                                    OsMatches = OsMatchesSection(
-                                        x.Items.OfType<os>().DefaultIfEmpty(null).FirstOrDefault())
-                                })
-                        : Enumerable.Empty<Host>();
         }
     }
 
     /// <summary>
-    /// Enumeration of potential scan types, including TCP, UDP, and SCTP scans
+    ///     Enumeration of potential scan types, including TCP, UDP, and SCTP scans
     /// </summary>
     public enum ScanType
     {
@@ -146,17 +145,25 @@ namespace SaltwaterTaffy
         Default,
 
         // TCP scans
-        Null, Fin, Xmas, Syn, Connect, Ack, Window, Maimon,
+        Null,
+        Fin,
+        Xmas,
+        Syn,
+        Connect,
+        Ack,
+        Window,
+        Maimon,
 
         // SCTP scans
-        SctpInit, SctpCookieEcho,
+        SctpInit,
+        SctpCookieEcho,
 
         // UDP-only scan
         Udp
     }
 
     /// <summary>
-    /// High-level scanner object for performing network reconnaissance using nmap
+    ///     High-level scanner object for performing network reconnaissance using nmap
     /// </summary>
     public class Scanner
     {
@@ -175,17 +182,7 @@ namespace SaltwaterTaffy
             };
 
         /// <summary>
-        /// Intended target.
-        /// </summary>
-        public Target Target { get; set; }
-
-        /// <summary>
-        /// NmapOptions that should persist between runs (e.g., --exclude foobar)
-        /// </summary>
-        public NmapOptions PersistentOptions { get; set; }
-
-        /// <summary>
-        /// Create a new scanner with an intended target
+        ///     Create a new scanner with an intended target
         /// </summary>
         /// <param name="target">Intended target</param>
         public Scanner(Target target)
@@ -194,7 +191,17 @@ namespace SaltwaterTaffy
         }
 
         /// <summary>
-        /// Create a new NmapContext with the intended target and our persistent options
+        ///     Intended target.
+        /// </summary>
+        public Target Target { get; set; }
+
+        /// <summary>
+        ///     NmapOptions that should persist between runs (e.g., --exclude foobar)
+        /// </summary>
+        public NmapOptions PersistentOptions { get; set; }
+
+        /// <summary>
+        ///     Create a new NmapContext with the intended target and our persistent options
         /// </summary>
         /// <returns>NmapContext with the intended target and our persistent options</returns>
         private NmapContext GetContext()
@@ -205,9 +212,9 @@ namespace SaltwaterTaffy
             }
 
             var ctx = new NmapContext
-            {
-                Target = Target.ToString()
-            };
+                {
+                    Target = Target.ToString()
+                };
 
             if (PersistentOptions != null)
             {
@@ -218,50 +225,53 @@ namespace SaltwaterTaffy
         }
 
         /// <summary>
-        /// Perform host discovery and OS detection on the intended target (preferably a subnet or IP range)
+        ///     Perform host discovery and OS detection on the intended target (preferably a subnet or IP range)
         /// </summary>
         /// <returns>A collection of Hosts detailing the results of the discovery</returns>
         public IEnumerable<Host> HostDiscovery()
         {
-            var ctx = GetContext();
+            NmapContext ctx = GetContext();
             ctx.Options.AddAll(new[]
                 {
                     NmapFlag.PingScan,
                     NmapFlag.OsDetection
                 });
             ctx.Options.Add(NmapFlag.OsDetection);
-             
+
             return new ScanResult(ctx.Run()).Hosts;
         }
 
         /// <summary>
-        /// Determine whether the intended target is firewalled.
+        ///     Determine whether the intended target is firewalled.
         /// </summary>
         /// <returns>Returns true if the intended targer is firewalled and false otherwise. If used on a subnet or IP range, this determines if any host has a firewall.</returns>
         public bool FirewallProtected()
         {
-            var ctx = GetContext();
-            ctx.Options.AddAll(new [] {
-                NmapFlag.AckScan,
-                NmapFlag.FragmentPackets
-            });
+            NmapContext ctx = GetContext();
+            ctx.Options.AddAll(new[]
+                {
+                    NmapFlag.AckScan,
+                    NmapFlag.FragmentPackets
+                });
 
             var sr = new ScanResult(ctx.Run());
 
             return
                 sr.Hosts.Any(
-                    x => (x.ExtraPorts.First().Count > 0 && x.ExtraPorts.First().State == "filtered") || x.Ports.Any(y => y.Filtered));
+                    x =>
+                    (x.ExtraPorts.First().Count > 0 && x.ExtraPorts.First().State == "filtered") ||
+                    x.Ports.Any(y => y.Filtered));
         }
 
         /// <summary>
-        /// Build an nmap context with the specified options
+        ///     Build an nmap context with the specified options
         /// </summary>
         /// <param name="scanType">The desired type of scan to perform</param>
         /// <param name="ports">The ports to scan (null of empty for default ports)</param>
         /// <returns>An nmap context for performing the desired scan</returns>
         private NmapContext _portScanCommon(ScanType scanType, string ports)
         {
-            var ctx = GetContext();
+            NmapContext ctx = GetContext();
 
             // We always try to detect the OS and the service versions
             ctx.Options.AddAll(new[]
@@ -292,51 +302,53 @@ namespace SaltwaterTaffy
         }
 
         /// <summary>
-        /// Perform a TCP port scan with service detection and OS detection.
+        ///     Perform a TCP port scan with service detection and OS detection.
         /// </summary>
         /// <returns>A ScanResult object detailing the results of the port scan</returns>
         public ScanResult PortScan()
         {
-            var ctx = _portScanCommon(ScanType.Default, null);
+            NmapContext ctx = _portScanCommon(ScanType.Default, null);
             return new ScanResult(ctx.Run());
         }
 
         /// <summary>
-        /// Perform the desired scan with service detection and OS detection.
+        ///     Perform the desired scan with service detection and OS detection.
         /// </summary>
         /// <returns>A ScanResult object detailing the results of the port scan</returns>
         public ScanResult PortScan(ScanType scanType)
         {
-            var ctx = _portScanCommon(scanType, null);
+            NmapContext ctx = _portScanCommon(scanType, null);
             return new ScanResult(ctx.Run());
         }
 
         /// <summary>
-        /// Perform a TCP port scan on the specified ports with service detection and OS detection.
+        ///     Perform a TCP port scan on the specified ports with service detection and OS detection.
         /// </summary>
         /// <param name="scanType">The type of scan to perform</param>
         /// <param name="ports">A list of ports to scan</param>
         /// <returns>A ScanResult object detailing the results of the port scan</returns>
         public ScanResult PortScan(ScanType scanType, IEnumerable<int> ports)
         {
-            var ctx = _portScanCommon(scanType, string.Join(",", ports.Select(x => x.ToString(CultureInfo.InvariantCulture))));
+            NmapContext ctx = _portScanCommon(scanType,
+                                              string.Join(",",
+                                                          ports.Select(x => x.ToString(CultureInfo.InvariantCulture))));
             return new ScanResult(ctx.Run());
         }
 
         /// <summary>
-        /// Perform a TCP port scan on the specified ports with service detection and OS detection.
+        ///     Perform a TCP port scan on the specified ports with service detection and OS detection.
         /// </summary>
         /// <param name="scanType">The type of scan to perform</param>
         /// <param name="ports">A string detailing which ports to scan (e.g., "10-20,33")</param>
         /// <returns>A ScanResult object detailing the results of the port scan</returns>
         public ScanResult PortScan(ScanType scanType, string ports)
         {
-            var ctx = _portScanCommon(scanType, ports);
+            NmapContext ctx = _portScanCommon(scanType, ports);
             return new ScanResult(ctx.Run());
         }
 
         /// <summary>
-        /// Yield a list of our own network interfaces (first half of nmap --iflist)
+        ///     Yield a list of our own network interfaces (first half of nmap --iflist)
         /// </summary>
         /// <returns>A list of our network interfaces</returns>
         public NetworkInterface[] GetAllHostNetworkInterfaces()

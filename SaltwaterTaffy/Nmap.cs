@@ -1,11 +1,13 @@
-﻿using System;
+﻿// This file is part of SaltwaterTaffy, an nmap wrapper library for .NET
+// Copyright (C) 2013 Thom Dixon <thom@thomdixon.org>
+// Released under the GNU GPLv2 or any later version
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Security.Principal;
-using System.Text;
 using System.IO;
+using System.Linq;
+using System.Text;
 using Simple.DotNMap;
 using Simple.DotNMap.Extensions;
 
@@ -127,12 +129,13 @@ namespace SaltwaterTaffy
     }
 
     /// <summary>
-    /// Class which represents command-line options for nmap
+    ///     Class which represents command-line options for nmap
     /// </summary>
     public class NmapOptions : IDictionary<NmapFlag, string>
     {
         #region NmapFlagToOption
-        private Dictionary<NmapFlag, string> _nmapFlagToOption = new Dictionary<NmapFlag, string>
+
+        private readonly Dictionary<NmapFlag, string> _nmapFlagToOption = new Dictionary<NmapFlag, string>
             {
                 {NmapFlag.InputFilename, "-iL"},
                 {NmapFlag.RandomTargets, "-iR"},
@@ -246,10 +249,12 @@ namespace SaltwaterTaffy
                 {NmapFlag.Version, "-V"},
                 {NmapFlag.Help, "-h"}
             };
+
         #endregion
 
         #region NmapOptionToFlag
-        private Dictionary<string, NmapFlag> _nmapOptionToFlag = new Dictionary<string, NmapFlag>
+
+        private readonly Dictionary<string, NmapFlag> _nmapOptionToFlag = new Dictionary<string, NmapFlag>
             {
                 {"-iL", NmapFlag.InputFilename},
                 {"-iR", NmapFlag.RandomTargets},
@@ -363,6 +368,7 @@ namespace SaltwaterTaffy
                 {"-V", NmapFlag.Version},
                 {"-h", NmapFlag.Help}
             };
+
         #endregion
 
         private readonly Dictionary<string, string> _nmapOptions;
@@ -371,7 +377,7 @@ namespace SaltwaterTaffy
         {
             _nmapOptions = new Dictionary<string, string>();
         }
-        
+
         public void Add(KeyValuePair<NmapFlag, string> kvp)
         {
             Add(kvp.Key, kvp.Value);
@@ -389,7 +395,9 @@ namespace SaltwaterTaffy
 
         public void CopyTo(KeyValuePair<NmapFlag, string>[] array, int arrayIndex)
         {
-            _nmapOptions.Select(x => new KeyValuePair<NmapFlag, string>(_nmapOptionToFlag[x.Key], x.Value)).ToArray().CopyTo(array, arrayIndex);
+            _nmapOptions.Select(x => new KeyValuePair<NmapFlag, string>(_nmapOptionToFlag[x.Key], x.Value))
+                        .ToArray()
+                        .CopyTo(array, arrayIndex);
         }
 
         public bool Remove(KeyValuePair<NmapFlag, string> item)
@@ -397,11 +405,13 @@ namespace SaltwaterTaffy
             return _nmapOptions.Remove(_nmapFlagToOption[item.Key]);
         }
 
-        public int Count {
+        public int Count
+        {
             get { return _nmapOptions.Count; }
         }
 
-        public bool IsReadOnly {
+        public bool IsReadOnly
+        {
             get { return false; }
         }
 
@@ -410,14 +420,9 @@ namespace SaltwaterTaffy
             return _nmapOptions.ContainsKey(_nmapFlagToOption[key]);
         }
 
-        public void Add(NmapFlag flag)
-        {
-            Add(flag, string.Empty);
-        }
-
         public void Add(NmapFlag flag, string argument)
         {
-            var option = _nmapFlagToOption[flag];
+            string option = _nmapFlagToOption[flag];
 
             if (_nmapOptions.ContainsKey(option))
             {
@@ -426,22 +431,6 @@ namespace SaltwaterTaffy
             else
             {
                 _nmapOptions.Add(option, argument);
-            }
-        }
-
-        public void AddAll(IEnumerable<NmapFlag> flags)
-        {
-            foreach (var flag in flags)
-            {
-                Add(flag);
-            }
-        }
-
-        public void AddAll(IEnumerable<KeyValuePair<NmapFlag, string>> kvps)
-        {
-            foreach (var kvp in kvps)
-            {
-                Add(kvp.Key, kvp.Value);
             }
         }
 
@@ -461,58 +450,72 @@ namespace SaltwaterTaffy
             set { _nmapOptions[_nmapFlagToOption[key]] = value; }
         }
 
-        public ICollection<NmapFlag> Keys { get { return _nmapOptions.Select(x => _nmapOptionToFlag[x.Key]).ToArray(); } }
-        public ICollection<string> Values { get { return _nmapOptions.Values; } }
+        public ICollection<NmapFlag> Keys
+        {
+            get { return _nmapOptions.Select(x => _nmapOptionToFlag[x.Key]).ToArray(); }
+        }
+
+        public ICollection<string> Values
+        {
+            get { return _nmapOptions.Values; }
+        }
 
 
         public IEnumerator<KeyValuePair<NmapFlag, string>> GetEnumerator()
         {
-            return _nmapOptions.Select(x => new KeyValuePair<NmapFlag, string>(_nmapOptionToFlag[x.Key], x.Value)).GetEnumerator();
-        }
-
-        public override string ToString()
-        {
-            return _nmapOptions.Aggregate(new StringBuilder(), (sb, kvp) => sb.AppendFormat("{0} {1} ", kvp.Key, kvp.Value), sb => sb.ToString()).Trim();
+            return
+                _nmapOptions.Select(x => new KeyValuePair<NmapFlag, string>(_nmapOptionToFlag[x.Key], x.Value))
+                            .GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
         }
+
+        public void Add(NmapFlag flag)
+        {
+            Add(flag, string.Empty);
+        }
+
+        public void AddAll(IEnumerable<NmapFlag> flags)
+        {
+            foreach (NmapFlag flag in flags)
+            {
+                Add(flag);
+            }
+        }
+
+        public void AddAll(IEnumerable<KeyValuePair<NmapFlag, string>> kvps)
+        {
+            foreach (var kvp in kvps)
+            {
+                Add(kvp.Key, kvp.Value);
+            }
+        }
+
+        public override string ToString()
+        {
+            return
+                _nmapOptions.Aggregate(new StringBuilder(), (sb, kvp) => sb.AppendFormat("{0} {1} ", kvp.Key, kvp.Value),
+                                       sb => sb.ToString()).Trim();
+        }
     }
 
     public class NmapException : ApplicationException
     {
-        public NmapException(string ex) : base(ex) {}
+        public NmapException(string ex) : base(ex)
+        {
+        }
     }
 
     /// <summary>
-    /// A class that represents an nmap run
+    ///     A class that represents an nmap run
     /// </summary>
     public class NmapContext
     {
         /// <summary>
-        /// The path to the nmap executable
-        /// </summary>
-        public string Path { get; set; }
-
-        /// <summary>
-        /// The output path for the nmap XML file
-        /// </summary>
-        public string OutputPath { get; set; }
-
-        /// <summary>
-        /// The specified nmap options
-        /// </summary>
-        public NmapOptions Options { get; set; }
-
-        /// <summary>
-        /// The intended target
-        /// </summary>
-        public string Target { get; set; }
-
-        /// <summary>
-        /// By default we try to find the path to the nmap executable by searching the path, the output XML file is a temporary file, and the nmap options are empty.
+        ///     By default we try to find the path to the nmap executable by searching the path, the output XML file is a temporary file, and the nmap options are empty.
         /// </summary>
         public NmapContext()
         {
@@ -522,18 +525,38 @@ namespace SaltwaterTaffy
         }
 
         /// <summary>
-        /// This searches our PATH environment variable for a particular file
+        ///     The path to the nmap executable
+        /// </summary>
+        public string Path { get; set; }
+
+        /// <summary>
+        ///     The output path for the nmap XML file
+        /// </summary>
+        public string OutputPath { get; set; }
+
+        /// <summary>
+        ///     The specified nmap options
+        /// </summary>
+        public NmapOptions Options { get; set; }
+
+        /// <summary>
+        ///     The intended target
+        /// </summary>
+        public string Target { get; set; }
+
+        /// <summary>
+        ///     This searches our PATH environment variable for a particular file
         /// </summary>
         /// <param name="filename">The file to search for</param>
         /// <returns>The path to the file if it is found, the empty string otherwise</returns>
         private static string LocateExecutable(string filename)
         {
-            var path = Environment.GetEnvironmentVariable("path");
-            var folders = path.Split(';');
+            string path = Environment.GetEnvironmentVariable("path");
+            string[] folders = path.Split(';');
 
-            foreach (var folder in folders)
+            foreach (string folder in folders)
             {
-                var combined = System.IO.Path.Combine(folder, filename);
+                string combined = System.IO.Path.Combine(folder, filename);
                 if (File.Exists(combined))
                 {
                     return combined;
@@ -544,7 +567,7 @@ namespace SaltwaterTaffy
         }
 
         /// <summary>
-        /// This searches our PATH for the nmap executable
+        ///     This searches our PATH for the nmap executable
         /// </summary>
         /// <returns>The path to the nmap exsecutable or the empty string if it cannot be located</returns>
         public string GetPathToNmap()
@@ -553,7 +576,7 @@ namespace SaltwaterTaffy
         }
 
         /// <summary>
-        /// Execute an nmap run with the specified options on the intended target, writing the resultant XML to the specified file
+        ///     Execute an nmap run with the specified options on the intended target, writing the resultant XML to the specified file
         /// </summary>
         /// <returns>An nmaprun object representing the result of an nmap run</returns>
         public virtual nmaprun Run()

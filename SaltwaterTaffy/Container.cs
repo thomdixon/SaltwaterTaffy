@@ -1,15 +1,14 @@
-﻿using System;
+﻿// This file is part of SaltwaterTaffy, an nmap wrapper library for .NET
+// Copyright (C) 2013 Thom Dixon <thom@thomdixon.org>
+// Released under the GNU GPLv2 or any later version
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using System.Text;
 
 namespace SaltwaterTaffy.Container
 {
     /// <summary>
-    /// Struct representing a service (e.g., ssh, httpd) running on a host
+    ///     Struct representing a service (e.g., ssh, httpd) running on a host
     /// </summary>
     public struct Service
     {
@@ -20,7 +19,7 @@ namespace SaltwaterTaffy.Container
     }
 
     /// <summary>
-    /// Struct representing a port on a host
+    ///     Struct representing a port on a host
     /// </summary>
     public struct Port
     {
@@ -31,7 +30,7 @@ namespace SaltwaterTaffy.Container
     }
 
     /// <summary>
-    /// Struct which represents the "extraports" information produced by nmap
+    ///     Struct which represents the "extraports" information produced by nmap
     /// </summary>
     public struct ExtraPorts
     {
@@ -40,7 +39,7 @@ namespace SaltwaterTaffy.Container
     }
 
     /// <summary>
-    /// Struct which represents an operating system
+    ///     Struct which represents an operating system
     /// </summary>
     public struct Os
     {
@@ -51,7 +50,7 @@ namespace SaltwaterTaffy.Container
     }
 
     /// <summary>
-    /// Struct which represents a scanned host
+    ///     Struct which represents a scanned host
     /// </summary>
     public struct Host
     {
@@ -63,7 +62,7 @@ namespace SaltwaterTaffy.Container
     }
 
     /// <summary>
-    /// Object representing the target(s) of an nmap scan
+    ///     Object representing the target(s) of an nmap scan
     /// </summary>
     public struct Target
     {

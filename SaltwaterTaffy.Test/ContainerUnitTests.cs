@@ -9,7 +9,7 @@ using SaltwaterTaffy.Container;
 namespace SaltwaterTaffy.Test
 {
     [TestClass]
-    public class ContainerUnitTests
+    public class TargetUnitTests
     {
         [TestMethod]
         public void when_Target_constructed_with_strings_then_ToString_should_yield_space_separated_target()

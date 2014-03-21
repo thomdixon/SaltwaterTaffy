@@ -233,10 +233,9 @@ namespace SaltwaterTaffy
             NmapContext ctx = GetContext();
             ctx.Options.AddAll(new[]
                 {
-                    NmapFlag.PingScan,
+                    NmapFlag.TcpSynScan,
                     NmapFlag.OsDetection
                 });
-            ctx.Options.Add(NmapFlag.OsDetection);
 
             return new ScanResult(ctx.Run()).Hosts;
         }

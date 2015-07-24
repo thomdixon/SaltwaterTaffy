@@ -178,7 +178,8 @@ namespace SaltwaterTaffy
                 {ScanType.Window, NmapFlag.WindowScan},
                 {ScanType.Maimon, NmapFlag.MaimonScan},
                 {ScanType.SctpInit, NmapFlag.SctpInitScan},
-                {ScanType.SctpCookieEcho, NmapFlag.CookieEchoScan}
+                {ScanType.SctpCookieEcho, NmapFlag.CookieEchoScan},
+                {ScanType.Udp, NmapFlag.UdpScan}
             };
 
         /// <summary>
@@ -292,7 +293,7 @@ namespace SaltwaterTaffy
             }
 
             // If we have a port specification, then use it
-            if (ports != null && !string.IsNullOrEmpty(ports))
+            if (!string.IsNullOrEmpty(ports))
             {
                 ctx.Options.Add(NmapFlag.PortSpecification, ports);
             }

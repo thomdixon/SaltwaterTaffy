@@ -14,7 +14,7 @@ namespace SaltwaterTaffy.Demo
             Console.Write("Enter an IP or subnet: ");
             var target = new Target(Console.ReadLine().Trim());
             Console.WriteLine("Initializing scan of {0}", target);
-            ScanResult result = new Scanner(target).PortScan();
+            ScanResult result = new Scanner(target, System.Diagnostics.ProcessWindowStyle.Normal).PortScan();
             Console.WriteLine("Detected {0} host(s), {1} up and {2} down.", result.Total, result.Up, result.Down);
             foreach (Host i in result.Hosts)
             {

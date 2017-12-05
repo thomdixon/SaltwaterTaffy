@@ -11,6 +11,7 @@ using System.Net.Sockets;
 using SaltwaterTaffy.Container;
 using SaltwaterTaffy.Utility;
 using Simple.DotNMap;
+using System.Diagnostics;
 
 namespace SaltwaterTaffy
 {
@@ -183,12 +184,15 @@ namespace SaltwaterTaffy
             };
 
         /// <summary>
-        ///     Create a new scanner with an intended target
+        ///     Create a new scanner with an intended target and Nmap process window style.
+        ///     
+        ///     Nmap ProcessWindowStyle is hidden if no argument is passed in.
         /// </summary>
         /// <param name="target">Intended target</param>
-        public Scanner(Target target)
+        public Scanner(Target target, ProcessWindowStyle nmapWindowStyle = ProcessWindowStyle.Hidden)
         {
             Target = target;
+            NmapWindowStyle = nmapWindowStyle;
         }
 
         /// <summary>
@@ -200,6 +204,11 @@ namespace SaltwaterTaffy
         ///     NmapOptions that should persist between runs (e.g., --exclude foobar)
         /// </summary>
         public NmapOptions PersistentOptions { get; set; }
+
+        /// <summary>
+        ///     Set the Nmap process window style. Default is Hidden.
+        /// </summary>
+        public ProcessWindowStyle NmapWindowStyle { get; set; }
 
         /// <summary>
         ///     Create a new NmapContext with the intended target and our persistent options
@@ -214,7 +223,8 @@ namespace SaltwaterTaffy
 
             var ctx = new NmapContext
                 {
-                    Target = Target.ToString()
+                    Target = Target.ToString(),
+                    WindowStyle = NmapWindowStyle
                 };
 
             if (PersistentOptions != null)

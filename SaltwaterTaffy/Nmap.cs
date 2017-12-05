@@ -516,12 +516,15 @@ namespace SaltwaterTaffy
     {
         /// <summary>
         ///     By default we try to find the path to the nmap executable by searching the path, the output XML file is a temporary file, and the nmap options are empty.
+        ///     
+        ///     Nmap ProcessWindowStyle is Hidden by default.
         /// </summary>
-        public NmapContext()
+        public NmapContext(ProcessWindowStyle windowStyle = ProcessWindowStyle.Hidden)
         {
             Path = GetPathToNmap();
             OutputPath = System.IO.Path.GetTempFileName();
             Options = new NmapOptions();
+            WindowStyle = windowStyle;
         }
 
         /// <summary>
@@ -543,6 +546,8 @@ namespace SaltwaterTaffy
         ///     The intended target
         /// </summary>
         public string Target { get; set; }
+
+        public ProcessWindowStyle WindowStyle { get; set; }
 
         /// <summary>
         ///     This searches our PATH environment variable for a particular file
@@ -607,7 +612,7 @@ namespace SaltwaterTaffy
             {
                 process.StartInfo.FileName = Path;
                 process.StartInfo.Arguments = string.Format("{0} {1}", Options, Target);
-                process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                process.StartInfo.WindowStyle = WindowStyle;
                 process.Start();
                 process.WaitForExit();
 

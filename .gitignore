@@ -1,0 +1,10 @@
+
+*.cache
+.vs/SaltwaterTaffy/v15/.suo
+SaltwaterTaffy.sln
+*.pdb
+SaltwaterTaffy/obj/Debug/SaltwaterTaffy.csproj.FileListAbsolute.txt
+SaltwaterTaffy.Demo/obj/x86/Debug/SaltwaterTaffy.Demo.csproj.FileListAbsolute.txt
+*.dll
+*.exe
+SaltwaterTaffy.Test/obj/Debug/SaltwaterTaffy.Test.csproj.FileListAbsolute.txt

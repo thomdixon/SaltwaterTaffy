@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Container.cs" />
+    <Compile Include="Ndiff.cs" />
     <Compile Include="Scanner.cs" />
     <Compile Include="Nmap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

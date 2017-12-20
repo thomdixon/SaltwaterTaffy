@@ -574,10 +574,19 @@ namespace SaltwaterTaffy
         /// <summary>
         ///     This searches our PATH for the nmap executable
         /// </summary>
-        /// <returns>The path to the nmap exsecutable or the empty string if it cannot be located</returns>
+        /// <returns>The path to the nmap executable or the empty string if it cannot be located</returns>
         public string GetPathToNmap()
         {
             return LocateExecutable("nmap.exe");
+        }
+
+        /// <summary>
+        ///     This searches our PATH for the ndiff executable
+        /// </summary>
+        /// <returns>The path to the ndiff executable or the empty string if it cannot be located</returns>
+        public string GetPathToNdiff()
+        {
+            return LocateExecutable("ndiff.exe");
         }
 
         /// <summary>

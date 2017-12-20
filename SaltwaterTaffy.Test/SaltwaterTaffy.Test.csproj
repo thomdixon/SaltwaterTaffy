@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ContainerUnitTests.cs" />
+    <Compile Include="NdiffUnitTests.cs" />
     <Compile Include="NmapUnitTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScannerUnitTests.cs" />

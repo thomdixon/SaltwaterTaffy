@@ -26,6 +26,7 @@ namespace SaltwaterTaffy.Container
         public int PortNumber { get; set; }
         public ProtocolType Protocol { get; set; }
         public bool Filtered { get; set; }
+        public string State { get; set; }
         public Service Service { get; set; }
     }
 

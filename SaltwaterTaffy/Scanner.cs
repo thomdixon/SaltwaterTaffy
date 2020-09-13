@@ -32,20 +32,20 @@ namespace SaltwaterTaffy
             Hosts = result.Items != null
                         ? result.Items.OfType<host>().Select(
                             x => new Host
-                                {
-                                    Address = IPAddress.Parse(x.address.addr),
-                                    Ports =
+                            {
+                                Address = IPAddress.Parse(x.address.addr),
+                                Ports =
                                         PortsSection(
                                             x.Items.OfType<ports>().DefaultIfEmpty(null).FirstOrDefault()),
-                                    ExtraPorts =
+                                ExtraPorts =
                                         ExtraPortsSection(
                                             x.Items.OfType<ports>().DefaultIfEmpty(null).FirstOrDefault()),
-                                    Hostnames =
+                                Hostnames =
                                         HostnamesSection(
                                             x.Items.OfType<hostnames>().DefaultIfEmpty(null).FirstOrDefault()),
-                                    OsMatches = OsMatchesSection(
+                                OsMatches = OsMatchesSection(
                                         x.Items.OfType<os>().DefaultIfEmpty(null).FirstOrDefault())
-                                })
+                            })
                         : Enumerable.Empty<Host>();
         }
 
@@ -64,26 +64,27 @@ namespace SaltwaterTaffy
             return portsSection != null && portsSection.port != null
                        ? portsSection.port.Select(
                            x => new Port
-                               {
-                                   PortNumber = int.Parse(x.portid),
-                                   Protocol = x.protocol != portProtocol.sctp
-                                                  ? (ProtocolType)
-                                                    Enum.Parse(typeof (ProtocolType),
-                                                               x.protocol == portProtocol.ip
-                                                                   ? x.protocol.ToString().ToUpperInvariant()
-                                                                   : x.protocol.ToString().Capitalize())
+                           {
+                               PortNumber = int.Parse(x.portid),
+                               Protocol = x.protocol != portProtocol.sctp
+                                                ? (ProtocolType)
+                                                    Enum.Parse(typeof(ProtocolType),
+                                                                x.protocol == portProtocol.ip
+                                                                    ? x.protocol.ToString().ToUpperInvariant()
+                                                                    : x.protocol.ToString().Capitalize())
                                                   : ProtocolType.Unknown,
-                                   Filtered = x.state.state1 == "filtered",
-                                   Service = x.service != null
+                               State = x.state.state1,
+                               Filtered = x.state.state1 == "filtered",
+                               Service = x.service != null
                                                  ? new Service
-                                                     {
-                                                         Name = x.service.name,
-                                                         Product = x.service.product,
-                                                         Os = x.service.ostype,
-                                                         Version = x.service.version
-                                                     }
+                                                 {
+                                                     Name = x.service.name,
+                                                     Product = x.service.product,
+                                                     Os = x.service.ostype,
+                                                     Version = x.service.version
+                                                 }
                                                  : default(Service)
-                               }
+                           }
                              )
                        : Enumerable.Empty<Port>();
         }
@@ -98,10 +99,10 @@ namespace SaltwaterTaffy
             return portsSection != null && portsSection.extraports != null
                        ? portsSection.extraports.Select(
                            x => new ExtraPorts
-                               {
-                                   Count = int.Parse(x.count),
-                                   State = x.state
-                               })
+                           {
+                               Count = int.Parse(x.count),
+                               State = x.state
+                           })
                        : Enumerable.Empty<ExtraPorts>();
         }
 
@@ -127,12 +128,12 @@ namespace SaltwaterTaffy
             return osSection != null && osSection.osmatch != null
                        ? osSection.osmatch.Select(
                            x => new Os
-                               {
-                                   Certainty = int.Parse(x.accuracy),
-                                   Name = x.name,
-                                   Family = x.osclass[0].osfamily,
-                                   Generation = x.osclass[0].osgen
-                               })
+                           {
+                               Certainty = int.Parse(x.accuracy),
+                               Name = x.name,
+                               Family = x.osclass[0].osfamily,
+                               Generation = x.osclass[0].osgen
+                           })
                        : Enumerable.Empty<Os>();
         }
     }
@@ -222,10 +223,10 @@ namespace SaltwaterTaffy
             }
 
             var ctx = new NmapContext
-                {
-                    Target = Target.ToString(),
-                    WindowStyle = NmapWindowStyle
-                };
+            {
+                Target = Target.ToString(),
+                WindowStyle = NmapWindowStyle
+            };
 
             if (PersistentOptions != null)
             {
